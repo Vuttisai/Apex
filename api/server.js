@@ -21,8 +21,12 @@ app.use(express.json());
 
 // Ensure uploads folder exists
 const uploadsDir = path.join(__dirname, '..', 'public', 'uploads');
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir, { recursive: true });
+try {
+  if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+  }
+} catch (e) {
+  console.warn('Uploads directory creation skipped (expected on Vercel):', e.message);
 }
 
 // Serve uploaded images statically

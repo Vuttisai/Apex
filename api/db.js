@@ -10,8 +10,12 @@ const DB_DIR = path.join(__dirname, '..', 'data');
 const DB_FILE = path.join(DB_DIR, 'db.json');
 
 // Ensure database folder exists
-if (!fs.existsSync(DB_DIR)) {
-  fs.mkdirSync(DB_DIR, { recursive: true });
+try {
+  if (!fs.existsSync(DB_DIR)) {
+    fs.mkdirSync(DB_DIR, { recursive: true });
+  }
+} catch (e) {
+  console.warn('Database directory creation skipped (expected on Vercel):', e.message);
 }
 
 // Initial/default seed data
@@ -155,12 +159,18 @@ const getInitialData = () => {
 // Database utility class
 class Database {
   constructor() {
+    this.inMemoryData = null;
     this.init();
   }
 
   init() {
-    if (!fs.existsSync(DB_FILE)) {
-      this.save(getInitialData());
+    try {
+      if (!fs.existsSync(DB_FILE)) {
+        this.save(getInitialData());
+      }
+    } catch (e) {
+      console.warn('Database initialization failed (expected on Vercel):', e.message);
+      this.inMemoryData = getInitialData();
     }
   }
 
