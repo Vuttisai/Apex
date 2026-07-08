@@ -165,6 +165,9 @@ class Database {
   }
 
   read() {
+    if (this.inMemoryData) {
+      return this.inMemoryData;
+    }
     try {
       const data = fs.readFileSync(DB_FILE, 'utf8');
       return JSON.parse(data);
@@ -177,10 +180,15 @@ class Database {
   save(data) {
     try {
       fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2), 'utf8');
+      // If we previously had in-memory data, sync it
+      if (this.inMemoryData) {
+        this.inMemoryData = data;
+      }
       return true;
     } catch (error) {
-      console.error('Error writing to database file', error);
-      return false;
+      console.warn('Database write failed (expected on Vercel). Operating in-memory for this session.', error.message);
+      this.inMemoryData = data;
+      return true;
     }
   }
 

@@ -255,7 +255,11 @@ if (fs.existsSync(distDir)) {
   });
 }
 
-// Start Server
-app.listen(PORT, () => {
-  console.log(`Express API Server running on port ${PORT}`);
-});
+// Start Server locally
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`Express API Server running on port ${PORT}`);
+  });
+}
+
+export default app;

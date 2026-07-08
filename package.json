@@ -5,11 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "concurrently --kill-others \"npm run server\" \"vite\"",
-    "server": "node server/server.js",
+    "server": "node api/server.js",
     "build": "vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-    "start": "node server/server.js"
+    "start": "node api/server.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
